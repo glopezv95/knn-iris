@@ -42,15 +42,17 @@ def col_score(data:pd.DataFrame, X:list, y:str, k: int = 6):
         
         knn = KNeighborsClassifier(n_neighbors = k, n_jobs = -1)
         knn.fit(X_train_scaled, y_train)
-        col_score_dict[item] = knn.score(X_test_scaled, y_test)
+        col_score_dict[item] = round(knn.score(X_test_scaled, y_test), 2)
         
     final_dict = {key: value for key, value in sorted(col_score_dict.items(),
                                                       key = lambda item: item[1])}
     
     col_score_bar.empty()
     
-    return final_dict
-        
+    final_df = {'variable':list(final_dict.keys()),
+                'accuracy':list(final_dict.values())}
+    
+    return final_df
 
 # def knn_global_metric(data: pd.DataFrame, X: list, y: str, k: int,
 #                       key_metric: str):

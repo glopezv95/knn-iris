@@ -46,5 +46,13 @@ if col_score_button:
         y)
     
 if scores is not None:
-    st.markdown('  \n'.join([f'{key} accuracy: {round(scores[key], 2)}' \
-        for key in scores]))
+    scores_col1, scores_col2 = st.columns(2)
+    
+    with scores_col1:
+        
+        st.markdown(
+            '''<p id = "accuracy_title">Discrete accuracy values 
+            for the selected features (k = 6)</p>''',
+                    unsafe_allow_html = True)
+        
+        st.dataframe(scores)

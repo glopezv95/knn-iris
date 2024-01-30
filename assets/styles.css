@@ -1,3 +1,14 @@
+:root {
+    --primary-color: #FF4B4B
+}
+
 [data-testid="stDataFrame"] {
-    width:100%
+    width:100%;
+    text-align: right;
+}
+
+#accuracy_title {
+    font-size: 20px;
+    color: var(--primary-color);
+    border-bottom: 2px solid black
 }
