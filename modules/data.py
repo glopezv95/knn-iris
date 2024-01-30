@@ -76,14 +76,14 @@ def k_score(data: pd.DataFrame, X: list, y: str, k_max: int):
     scaler.fit_transform(X_train)
     scaler.transform(X_test)
     
-    for k_value in np.arange(1, k_max):
+    for k_value in np.arange(1, k_max + 1):
         
         knn = KNeighborsClassifier(k_value)
         knn.fit(X_train, y_train)
         score = knn.score(X_test, y_test)
         
-        k_score_dict['k'] = k_value
-        k_score_dict['accuracy'] = score
+        k_score_dict['k'].append(k_value)
+        k_score_dict['accuracy'].append(score)
     
     return k_score_dict
             
