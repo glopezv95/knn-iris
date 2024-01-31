@@ -5,7 +5,7 @@ from itertools import combinations
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score
+from sklearn.metrics import precision_recall_fscore_support
 import numpy as np
 
 # Fetch data for UCI Machine Learning Repository
@@ -20,16 +20,20 @@ default_df['species'] = iris.data.targets
 default_df = default_df.drop('class', axis = 1)
 default_df.columns = default_df.columns.str.replace(' ', '_')
 
-def col_score(data:pd.DataFrame, X:list, y:str, k: int = 6):
+def col_score(data:pd.DataFrame, X:list, y:str, avg: str, k: int = 6):
     col_score_bar = st.progress(0, 'Computing data...')
-    col_score_dict = {}
+    col_score_dict = {'variable':[],
+                      'accuracy':[],
+                      'precision':[],
+                      'recall':[],
+                      'f1':[]}
     
     for item in X:
         
-        col_score_bar.progress(len(col_score_dict)/len(X),
+        col_score_bar.progress(len(col_score_dict['variable'])/len(X),
                                text = f'Computing data... {(len(col_score_dict)/len(X)) * 100}%')
         
-        X_test, X_train, y_test, y_train = train_test_split(
+        X_train, X_test, y_train, y_test = train_test_split(
             data[item].values.reshape(-1, 1),
             np.ravel(data[y].values.reshape(-1, 1)),
             train_size = .2,
@@ -42,18 +46,29 @@ def col_score(data:pd.DataFrame, X:list, y:str, k: int = 6):
         
         knn = KNeighborsClassifier(n_neighbors = k, n_jobs = -1)
         knn.fit(X_train_scaled, y_train)
-        col_score_dict[item] = round(knn.score(X_test_scaled, y_test), 2)
+        col_score_dict['variable'].append(item)
+        acc = round(knn.score(X_test_scaled, y_test), 2)
         
-    final_dict = {key: value for key, value in sorted(col_score_dict.items(),
-                                                      key = lambda item: item[1],
-                                                      reverse = True)}
+        y_pred = knn.predict(X_test_scaled)
+        
+        prec, recall, f1, support = precision_recall_fscore_support(
+            y_true = y_test,
+            y_pred = y_pred,
+            average = avg)
+        
+        for key, var in {'accuracy': acc,
+                    'precision': prec,
+                    'recall': recall,
+                    'f1':f1}.items():
+            
+            col_score_dict[key].append(var)
+            
+    col_score_df = pd.DataFrame(col_score_dict).sort_values(
+        by = 'accuracy', ascending = False).reset_index(drop = True)
     
     col_score_bar.empty()
     
-    final_df = {'variable':list(final_dict.keys()),
-                'accuracy':list(final_dict.values())}
-    
-    return final_df
+    return col_score_df
 
 def k_score(data: pd.DataFrame, X: list, y: str, k_max: int):
     
