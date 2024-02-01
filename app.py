@@ -207,3 +207,33 @@ with col2.expander(
         
     else:
         st.write('Please evaluate the most relevant features and optimal k first')
+        
+data_columns1, data_columns2= col2.columns([.65, .35])
+
+with data_columns1.expander(
+    label = 'Variables datatype'):
+
+    types_df = pd.DataFrame(
+        df.dtypes,
+        columns = ['Data type']).reset_index(names = 'Variable')
+    
+    st.dataframe(types_df, use_container_width = True, hide_index = True)
+
+with data_columns1.expander(
+    label = 'Class instances'):
+    
+    class_instances = df.groupby(y).agg('count').iloc[:,0].reset_index()
+    class_instances.columns = [f'{y.title()}', 'Instance']
+    st.dataframe(class_instances, use_container_width = True, hide_index = True)
+    
+data_columns2.write(f'#### Data table size')
+data_columns2.write(f'''Number of rows: {len(df)}  \n\
+           Number of columns: {len(df.columns)}''')
+
+side_menu.write('Gabriel López Vinielles')
+side_menu.link_button(label = 'LinkedIn',
+                          url = 'https://www.linkedin.com/in/gabriel-lópez-vinielles-87435713a',
+                          use_container_width = True)
+side_menu.link_button(label = 'GitHub',
+                          url = 'https://github.com/glopezv95',
+                          use_container_width = True)
