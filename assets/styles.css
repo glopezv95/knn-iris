@@ -1,9 +1,88 @@
-:root {
-    --primary-color: #FF4B4B
+[data-testid="stSidebarContent"], .st-emotion-cache-wcklni.e1f1d6gn3 {
+    background-color: #1F1D36;
+    transition: 2s;
 }
 
-#accuracy_title {
-    font-size: 20px;
-    color: var(--primary-color);
-    border-bottom: 2px solid black
+[data-testid="stSidebarContent"]:hover, .st-emotion-cache-wcklni.e1f1d6gn3:hover {
+    background-color: #872341;
+}
+
+.st-emotion-cache-wcklni.e1f1d6gn3 {
+    border-radius: 5px;
+}
+
+[data-baseweb="select"] > div > div > div,
+[kind="secondary"],
+[kind="secondary"] > div,
+.st-emotion-cache-13n7ujb,
+.st-emotion-cache-k7vsyb h1,
+.st-emotion-cache-gkp278 p,
+.st-emotion-cache-gkp278 p,
+[data-baseweb="icon"],
+[data-baseweb="base-input"] > input,
+.st-emotion-cache-76z9jo.e116k4er2 > button,
+hr,
+[aria-selected="true"] > div > div > div {
+    color: white
+}
+
+h4, .st-emotion-cache-1kn7chm.e1nzilvr5 > p {
+    padding: 0% 10%;
+}
+
+h4 {
+    padding-top: 5%;
+}
+
+a {
+    display: flex;
+    justify-content: center;
+}
+
+.st-emotion-cache-1kn7chm.e1nzilvr5 > p {
+    padding-bottom: 5%;
+}
+
+[data-baseweb="progress-bar"] > div > div {
+    background-color: #1F1D36;
+}
+
+[data-baseweb="progress-bar"] > div > div > div {
+    background-color: #872341;
+}
+
+hr {
+    background-color: white;
+}
+
+.st-emotion-cache-15amdoi.ef3psqc12 {
+    background-color: rgb(16, 82, 126);
+}
+
+[data-baseweb="icon"]:hover {
+    cursor: pointer;
+}
+
+[data-testid="stNumberInput-StepUp"] > svg,
+[aria-label="Clear all"],
+[data-testid="stNumberInput-StepDown"] > svg,
+[title="Delete"] {
+    transition: 0.2s
+}
+
+[data-testid="stNumberInput-StepUp"] > svg:hover,
+[aria-label="Clear all"]:hover,
+[title="Delete"]:hover {
+    rotate: 45deg;
+    fill: white;
+    filter: invert(0.5)
+}
+
+[data-testid="stNumberInput-StepDown"] > svg:hover {
+    filter: invert(0.5)
+}
+
+.st-emotion-cache-1s7rl8t.ef3psqc12:hover{
+    color: white;
+    filter:invert(0.1)
 }
