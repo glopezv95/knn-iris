@@ -28,10 +28,10 @@ def col_score(data:pd.DataFrame, X:list, y:str, avg: str, k: int = 6):
                       'recall':[],
                       'f1':[]}
     
-    for item in X:
+    for index, item in enumerate(X):
         
-        col_score_bar.progress(len(col_score_dict['variable'])/len(X),
-                               text = f'Computing data... {(len(col_score_dict)/len(X)) * 100}%')
+        col_score_bar.progress(value = round(index/len(X), 1),
+                               text = f'Computing data... {round(index/len(X) * 100, 1)}%')
         
         X_train, X_test, y_train, y_test = train_test_split(
             data[item].values.reshape(-1, 1),
@@ -72,7 +72,7 @@ def col_score(data:pd.DataFrame, X:list, y:str, avg: str, k: int = 6):
 
 def k_score(data: pd.DataFrame, X: list, y: str, k_max: int):
     
-    k_score_dict = {'k':[], 'accuracy':[]}
+    k_score_dict = {'k':[], 'accuracy_test':[], 'accuracy_train':[]}
     
     if len(X) == 1:
             X_reshaped = data[X].values.reshape(-1, 1)
@@ -81,7 +81,7 @@ def k_score(data: pd.DataFrame, X: list, y: str, k_max: int):
         
     X_train, X_test, y_train, y_test = train_test_split(
         X_reshaped,
-        data[y].values.reshape(-1, 1),
+        np.ravel(data[y].values.reshape(-1, 1)),
         train_size = .2,
         random_state = 17,
         stratify = data[y].values.reshape(-1, 1))
@@ -95,12 +95,37 @@ def k_score(data: pd.DataFrame, X: list, y: str, k_max: int):
         
         knn = KNeighborsClassifier(k_value)
         knn.fit(X_train, y_train)
-        score = knn.score(X_test, y_test)
+        score_train = knn.score(X_train, y_train)
+        score_test = knn.score(X_test, y_test)
         
         k_score_dict['k'].append(k_value)
-        k_score_dict['accuracy'].append(score)
+        k_score_dict['accuracy_test'].append(score_test)
+        k_score_dict['accuracy_train'].append(score_train)
     
-    return k_score_dict
+    return pd.DataFrame(k_score_dict)
+
+def gen_knn(data: pd.DataFrame,
+            X: list, X_to_pred: list, y:str, k: int):
+    
+    if len(X) == 1:
+        X_reshaped = data[X].values.reshape(-1, 1)
+        X_to_pred_reshaped = np.array(X_to_pred).reshape(-1, 1)
+        
+    else:
+        X_reshaped = data[X].values
+        X_to_pred_reshaped = np.array(X_to_pred)
+    
+    y_train = np.ravel(data[y].values.reshape(-1,1))
+    
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X_reshaped)
+    X_to_pred_scaled = scaler.transform(X_to_pred_reshaped)
+    
+    knn = KNeighborsClassifier(n_neighbors = k)
+    knn.fit(X_scaled, y_train)
+    prediction = knn.predict(X_to_pred_scaled)
+    
+    return prediction
             
 # def knn_global_metric(data: pd.DataFrame, X: list, y: str, k: int,
 #                       key_metric: str):
